@@ -1,14 +1,13 @@
 // src/app/layout.tsx
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // 1. Import the font
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers"; // 1. Import our new Providers component
 
-// 2. Initialize the font with the settings we want
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  // Bonus: I've updated your page title and description
   title: "AI Website Builder",
   description: "Generate stunning websites with the power of AI",
 };
@@ -19,9 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      {/* 3. Apply the font's generated className to the entire body */}
-      <body className={inter.className}>{children}</body>
+    // 2. Add suppressHydrationWarning to the <html> tag
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        {/* 3. Wrap the children with the Providers component */}
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
