@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-
+import { Chatbot } from "@/components/Chatbot";
 
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
@@ -112,6 +112,7 @@ export default function HomePage() {
               </div>
             </div>
           )}
+          <Chatbot codeContext={aiResponse} />
         </div>
       </div>
     </main>
