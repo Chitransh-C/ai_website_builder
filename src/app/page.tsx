@@ -6,7 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { Chatbot } from "@/components/Chatbot";
-
+import { CopyButton } from "@/components/CopyButton";
 // --- NEW: Define the structure for a history item ---
 interface HistoryItem {
   prompt: string;
@@ -71,7 +71,7 @@ export default function HomePage() {
     }
   }, [aiResponse]);
 
-  return (
+ return (
     <>
       <div className="flex min-h-screen bg-slate-50 dark:bg-gray-900 transition-colors">
         
@@ -113,7 +113,8 @@ export default function HomePage() {
             <div className={isFocusMode ? 'hidden' : 'block'}>
               <div className="flex justify-between items-center mb-2">
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-slate-200">AI Website Builder</h1>
-               
+                {/* FIX: Added the ThemeSwitcher back in */}
+              
               </div>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
                 Enter a detailed description of the website or component you want to build.
@@ -157,10 +158,27 @@ export default function HomePage() {
                       <button onClick={() => setActiveTab('css')} className={`px-4 py-2 font-medium ${activeTab === 'css' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500'}`}>CSS</button>
                       <button onClick={() => setActiveTab('js')} className={`px-4 py-2 font-medium ${activeTab === 'js' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500'}`}>JavaScript</button>
                     </div>
-                    <div className="code-display bg-[#1e1e1e] rounded-b-md overflow-hidden">
-                      {activeTab === 'html' && <SyntaxHighlighter language="html" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.html}</SyntaxHighlighter>}
-                      {activeTab === 'css' && <SyntaxHighlighter language="css" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.css}</SyntaxHighlighter>}
-                      {activeTab === 'js' && <SyntaxHighlighter language="javascript" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.js}</SyntaxHighlighter>}
+                    <div className="relative code-display bg-[#1e1e1e] rounded-b-md overflow-hidden">
+                      {activeTab === 'html' && (
+                        <>
+                          <CopyButton textToCopy={aiResponse.html} />
+                          <SyntaxHighlighter language="html" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.html}</SyntaxHighlighter>
+                        </>
+                      )}
+                      {activeTab === 'css' && (
+                        <>
+                          {/* FIX: Changed to aiResponse.css */}
+                          <CopyButton textToCopy={aiResponse.css} />
+                          <SyntaxHighlighter language="css" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.css}</SyntaxHighlighter>
+                        </>
+                      )}
+                      {activeTab === 'javascript' && (
+                        <>
+                          {/* FIX: Changed to aiResponse.js */}
+                          <CopyButton textToCopy={aiResponse.js} />
+                          <SyntaxHighlighter language="javascript" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.js}</SyntaxHighlighter>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
