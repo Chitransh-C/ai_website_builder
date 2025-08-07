@@ -76,10 +76,10 @@ export const Chatbot = ({ codeContext }: ChatbotProps) => {
   if (!codeContext) { return null; }
 
   return (
-    // The rest of your JSX remains the same...
-    <div>
+    
+    <div className="z-50">
       {/* Chat Window */}
-      <div className={`fixed bottom-24 right-4 sm:right-8 w-[90vw] max-w-lg h-[70vh] max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl flex flex-col transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
+      <div className={`z-53 fixed bottom-24 right-4 sm:right-8 w-[90vw] max-w-lg h-[70vh] max-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl flex flex-col transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
         <div className="flex justify-between items-center p-4 bg-indigo-600 text-white rounded-t-lg flex-shrink-0">
           <h3 className="text-lg font-semibold">AI Code Assistant</h3>
           <button onClick={() => setIsOpen(false)} className="p-1 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-white">
@@ -116,7 +116,7 @@ export const Chatbot = ({ codeContext }: ChatbotProps) => {
       </div>
 
       {/* Floating Toggle Button */}
-      <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-4 right-4 sm:right-8 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform hover:scale-110" title="Open AI Assistant">
+      <button onClick={() => setIsOpen(!isOpen)} className="z-50 fixed bottom-4 right-4 sm:right-8 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform hover:scale-110" title="Open AI Assistant">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
       </button>
     </div>
