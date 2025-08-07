@@ -172,7 +172,7 @@ export default function HomePage() {
                           <SyntaxHighlighter language="css" style={vscDarkPlus} customStyle={{ margin: 0 }}>{aiResponse.css}</SyntaxHighlighter>
                         </>
                       )}
-                      {activeTab === 'javascript' && (
+                      {activeTab === 'js' && (
                         <>
                           {/* FIX: Changed to aiResponse.js */}
                           <CopyButton textToCopy={aiResponse.js} />
