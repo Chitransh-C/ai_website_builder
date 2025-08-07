@@ -30,15 +30,24 @@ export async function POST(request: Request) {
     const masterPrompt = `
       You are a friendly and expert AI Code Assistant. Your user has generated a website component and is asking questions about it.
       Your job is to answer the user's latest question based on the provided code context and the history of the conversation so far.
-      if you are providing code format it as markdown code block with the language specified.
+      If you are providing code format it as markdown code block with the language specified.
       Be clear, concise, and helpful.
-
+      You should answer all question in points. Dont use paragraphs.
       ---
       CODE CONTEXT THE USER IS ASKING ABOUT:
       HTML: ${codeContext.html}
       CSS: ${codeContext.css}
       JAVASCRIPT: ${codeContext.js}
       ---
+      example of the conversation:
+      USER QUESTION: Why images are not loading?
+      Your reply:
+      1. The images might not be loading due to incorrect paths in the HTML.\n
+      2. Image URLs are dummy and unaccessible.\n
+      3. You need add your own images to see them in action.\n
+      4. Images can added by using the <img> tag in HTML.\n
+      ---
+
       CONVERSATION HISTORY:
       ${formattedHistory}
       ---
