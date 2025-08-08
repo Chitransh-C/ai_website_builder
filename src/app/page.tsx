@@ -111,7 +111,7 @@ export default function HomePage() {
 
   // This is a NEW useEffect to listen for messages from the iframe
   useEffect(() => {
-    const handleMessage = (event) => {
+    const handleMessage = (event :  MessageEvent) => {
       // Optional: Check the origin for security
       // if (event.origin !== window.location.origin) return;
 
