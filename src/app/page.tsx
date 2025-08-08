@@ -16,7 +16,35 @@ interface HistoryItem {
     js: string;
   };
 }
+// Add this script constant at the top of your page.tsx file
+const inspectorScript = `
+  let lastHighlightedElement = null;
+  const highlightStyle = '2px solid #3b82f6'; // blue-500
 
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target;
+    // Remove previous highlight
+    if (lastHighlightedElement) {
+      lastHighlightedElement.style.outline = '';
+    }
+    // Add new highlight
+    if (target && target instanceof HTMLElement) {
+      target.style.outline = highlightStyle;
+      lastHighlightedElement = target;
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.target;
+    if (target && target instanceof HTMLElement) {
+      // For now, we'll send the tag name. Later, we'll send a unique ID.
+      const elementIdentifier = target.tagName;
+      window.parent.postMessage({ type: 'elementClicked', element: elementIdentifier }, '*');
+    }
+  }, true); // Use capture phase to catch the click early
+`;
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +52,7 @@ export default function HomePage() {
   
   // --- NEW: State for session history ---
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  
+  const [isDevMode, setIsDevMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'html' | 'css' | 'js'>('html');
   const [isFocusMode, setIsFocusMode] = useState(false);
  const [isHistoryOpen, setIsHistoryOpen] = useState(true);
@@ -59,17 +87,48 @@ export default function HomePage() {
     setAiResponse(item.code);
   };
 
-  useEffect(() => {
+  // This first useEffect is MODIFIED to inject our inspector script
+ useEffect(() => {
     if (aiResponse) {
-      const fullHtml = `
+      let fullHtml = `
         <!DOCTYPE html><html lang="en">
         <head><style>${aiResponse.css}</style></head>
-        <body>${aiResponse.html}<script>${aiResponse.js}</script></body>
+        <body>
+          ${aiResponse.html}
+          <script>${aiResponse.js}</script>
+        </body>
         </html>`;
+
+      // NEW: Only inject the inspector script if Dev Mode is ON
+      if (isDevMode) {
+        fullHtml = fullHtml.replace('</body>', `<script>${inspectorScript}</script></body>`);
+      }
+      
       const iframe = document.getElementById('preview-iframe') as HTMLIFrameElement;
       if (iframe) { iframe.srcdoc = fullHtml; }
     }
-  }, [aiResponse]);
+  }, [aiResponse, isDevMode]); // NEW: Add isDevMode to the dependency array // This effect still runs when the AI response changes
+
+  // This is a NEW useEffect to listen for messages from the iframe
+  useEffect(() => {
+    const handleMessage = (event) => {
+      // Optional: Check the origin for security
+      // if (event.origin !== window.location.origin) return;
+
+      if (event.data && event.data.type === 'elementClicked') {
+        console.log('Element clicked inside iframe:', event.data.element);
+        // In the next step, we will use this data to show the element's code
+        alert(`You clicked on a <${event.data.element.toLowerCase()}> tag!`);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []); // The empty dependency array means this effect runs only once when the component mounts
 
  return (
     <>
@@ -114,7 +173,17 @@ export default function HomePage() {
               <div className="flex justify-between items-center mb-2">
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-slate-200">AI Website Builder</h1>
                 {/* FIX: Added the ThemeSwitcher back in */}
-              
+             { /*This will go inside the header div in page.tsx*/}
+<div className="flex items-center gap-2">
+  <label htmlFor="devModeToggle" className="text-sm text-gray-600 dark:text-gray-400">Dev Mode</label>
+  <button
+    id="devModeToggle"
+    onClick={() => setIsDevMode(!isDevMode)}
+    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isDevMode ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'}`}
+  >
+    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isDevMode ? 'translate-x-6' : 'translate-x-1'}`}/>
+  </button>
+</div>
               </div>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
                 Enter a detailed description of the website or component you want to build.
