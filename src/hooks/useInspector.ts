@@ -129,44 +129,38 @@ export const useInspector = (
   }, [aiResponse, isDevMode]); // This effect now correctly depends on aiResponse and isDevMode
   
   // The full refine logic
+  // This is the NEW version that can refine HTML, CSS, and JS
   const handleRefineClick = async () => {
-    if (!selectedElementCode || !refineInstruction || !aiResponse || !processedHtml) return;
+    // We now need the full aiResponse, not just the selected snippet
+    if (!refineInstruction || !aiResponse) return;
+    
     setIsRefining(true);
-    console.log("button is clicked")
     try {
       const response = await fetch('/api/refine-element', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ codeSnippet: selectedElementCode, instruction: refineInstruction }),
+        body: JSON.stringify({
+          originalCode: aiResponse, // Send the full component code for context
+          instruction: refineInstruction,
+        }),
       });
-      if (!response.ok) { throw new Error('Failed to refine element'); }
-      const data = await response.json();
-      const modifiedCode = data.modifiedCode;
-      
-    const tempDoc = new DOMParser().parseFromString(processedHtml, 'text/html');
-      const idMatch = selectedElementCode.match(/data-id="([^"]+)"/);
-if (!idMatch) {
-  throw new Error("Could not find data-id in the selected element.");
-}
-const elementIdToReplace = idMatch[1];
-const elementToReplace = tempDoc.querySelector(`[data-id="${elementIdToReplace}"]`);
-      if (elementToReplace) {
-  elementToReplace.outerHTML = modifiedCode;
-} else {
-  throw new Error("Could not find the element to replace in the DOM tree.");
-}
-tempDoc.querySelectorAll('[data-id]').forEach(el => el.removeAttribute('data-id'));
 
-const finalCleanHtml = tempDoc.documentElement.outerHTML;
+      if (!response.ok) { throw new Error('Failed to refine element'); }
+
+      // The API now returns the complete, updated code object
+      const refinedCode = await response.json();
       
-      const newCodeState = { ...aiResponse, html: finalCleanHtml };
+      // Update the parent component's state with the new, fully refined code
+      setAiResponse(refinedCode);
       
-      setAiResponse(newCodeState);
+      // Update the history with the new version
       setHistory(prevHistory => {
         const newHistory = [...prevHistory];
+        // Find the index of the item we just refined
         const currentIndex = newHistory.findIndex(item => item.code.html === aiResponse.html && item.code.css === aiResponse.css);
         if (currentIndex !== -1) {
-          newHistory[currentIndex] = { ...newHistory[currentIndex], code: newCodeState };
+          // Replace the old code with the new refined code
+          newHistory[currentIndex] = { ...newHistory[currentIndex], code: refinedCode };
         }
         return newHistory;
       });
@@ -180,7 +174,6 @@ const finalCleanHtml = tempDoc.documentElement.outerHTML;
       setIsRefining(false);
     }
   };
-
   // Return everything the HomePage component needs
   return {
     selectedElementCode,

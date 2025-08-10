@@ -6,57 +6,68 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_REFINE_KEY as string);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { codeSnippet, instruction } = body;
+    // We now expect the full original component code and the instruction
+    const { originalCode, instruction } = body;
 
-    if (!codeSnippet || !instruction) {
-      return Response.json({ error: "Code snippet and instruction are required" }, { status: 400 });
+    if (!originalCode || !instruction) {
+      return Response.json({ error: "Original code and instruction are required" }, { status: 400 });
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    
-      const masterPrompt = `
-      You are an AI code refactoring expert. Your task is to modify a given HTML code snippet based on a user's instruction and return only the updated snippet.
+    // This is the new, more powerful master prompt for refining
+    const masterPrompt = `
+      You are an expert AI code refactoring assistant. Your task is to intelligently modify a given web component (composed of HTML, CSS, JS, and external scripts) based on a user's instruction.
 
       ---
       RULES:
-      1. You MUST return ONLY the raw, modified HTML code snippet.
-      2. Do not add any explanations, markdown formatting (like \`\`\`html), JSON, or any other text. Your entire response should be only the code.
-      3. The returned snippet MUST be a direct, drop-in replacement for the original. Preserve the element's surrounding structure.
-      4. If the instruction is unclear, impossible, or you cannot perform it, return the original, unmodified code snippet.
-      5. Apply changes by modifying Tailwind CSS classes where possible.
+      1. Your response MUST be ONLY a single, valid JSON object with the keys "html", "css", "js", and "external_scripts".
+      2. Do not add any explanations or markdown formatting.
+      3. The returned code should be a complete, drop-in replacement for the original.
+      4. Only modify the parts of the code necessary to fulfill the request. For example, if the change is only to the CSS, return the original, unchanged HTML and JS.
+      5. If the user's request requires a new external library, add its CDN URL to the "external_scripts" array.
+      6. Ensure all CSS and JS remains properly scoped according to the original code's conventions.
       ---
-      EXAMPLES:
-
-     1. ORIGINAL CODE SNIPPET:
-      \`\`\`html
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Click Here</button>
-      \`\`\`
+      ---
+      EXAMPLE:
+      ORIGINAL COMPONENT CODE:
+      {
+        "html": "<!DOCTYPE html><html lang=\"en\"><head><script src=\"https://cdn.tailwindcss.com\"></script></head><body class=\"bg-gray-100 flex items-center justify-center min-h-screen\"><div class=\"component-a1b2\"><button class=\"my-button bg-blue-500 text-white p-2 rounded\">Show Alert</button></div></body></html>",
+        "css": ".component-a1b2 .my-button { font-weight: bold; }",
+        "js": "(() => { const btn = document.querySelector('.component-a1b2 .my-button'); if(btn) { btn.addEventListener('click', () => alert('Hello!')); } })();",
+        "external_scripts": []
+      }
 
       USER'S REFINEMENT INSTRUCTION:
-      "make the button green and the text larger"
+      "Change the alert message to 'Goodbye' and make the button text red"
 
-      MODIFIED CODE SNIPPET:
-      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-lg">Click Here</button>
-      ----
-
-      ORIGINAL CODE SNIPPET:
-      \`\`\`html
-      ${codeSnippet}
-      \`\`\`
-
+      YOUR MODIFIED JSON RESPONSE:
+      {
+        "html": "<!DOCTYPE html><html lang=\"en\"><head><script src=\"https://cdn.tailwindcss.com\"></script></head><body class=\"bg-gray-100 flex items-center justify-center min-h-screen\"><div class=\"component-a1b2\"><button class=\"my-button bg-blue-500 text-red-500 p-2 rounded\">Show Alert</button></div></body></html>",
+        "css": ".component-a1b2 .my-button { font-weight: bold; }",
+        "js": "(() => { const btn = document.querySelector('.component-a1b2 .my-button'); if(btn) { btn.addEventListener('click', () => alert('Goodbye')); } })();",
+        "external_scripts": []
+      }
+      ---
+      ORIGINAL COMPONENT CODE:
+      ${JSON.stringify(originalCode, null, 2)}
+      ---
       USER'S REFINEMENT INSTRUCTION:
       "${instruction}"
       ---
 
-      MODIFIED CODE SNIPPET:    
+      YOUR MODIFIED JSON RESPONSE:
     `;
 
     const result = await model.generateContent(masterPrompt);
     const response = await result.response;
-    const modifiedCode = response.text();
+    const text = response.text();
 
-    return Response.json({ modifiedCode });
+    // We expect a full JSON object now, so we can send it directly
+    return new Response(text, {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
 
   } catch (error) {
     console.error("Error in refine API route:", error);
