@@ -21,9 +21,13 @@ function extractJsonContent(rawString: string) {
   const extractArray = (key: string) => {
     const regex = new RegExp(`"${key}"\\s*:\\s*\\[([^\\]]*)\\]`);
     const match = rawString.match(regex);
-    if (!match) return [];
+    if (!match || !match[1]) return [];
     // It splits the captured content by commas and cleans it up.
-    return match[1].split(',').map(s => s.trim().replace(/"/g, '')).filter(s => s);
+    return match[1]
+      .split(',')
+      .map(s => s.trim().replace(/["\n\r]/g, '')) // Removes quotes and newlines
+      .filter(s => s && s.startsWith('http')); // Ensures it's a valid, non-empty URL
+ 
   };
 
   const html = extract("html");
@@ -60,7 +64,7 @@ You are an expert web developer AI who is a specialist in creating clean, modern
 RULES:
 1.  Insert placeholder images in appropriate sections using relevant alt text, such as <img src="https://picsum.photos/800/600" alt="Lorem Picsum 800x600"> but only 4 images for more use placehold.co <img src="https://placehold.co/800x600" alt="placeholder img">, ensuring they match the content context and maintain responsive sizing.
 2.  The JSON object must have three keys: "html", "css","js", and "external_scripts".
-3.  **TAILWIND FIRST**: All styling MUST be done with Tailwind CSS classes directly in the HTML.
+3.  **TAILWIND FIRST**: All styling MUST be done with Tailwind CSS classes directly in the HTML. do not use external stylesheets lib except tailwind.
 4.  The 'css' key should ONLY be used for essential base styles (like body background, fonts) or complex animations. For components, it should usually be an empty string.
 5.  All HTML responses MUST include the Tailwind CSS Play CDN script in the <head>. This is mandatory. The script tag is: <script src="https://cdn.tailwindcss.com"></script>
 6.  If the user asks for a simple component (e.g., button, card), provide the HTML with js for that component providing the component with complete functionality.
@@ -75,7 +79,8 @@ RULES:
 15. Add the correct code in the correct key, do not add all the code in a single key. divide the code in the correct keys.
 16.  **CSS SCOPING**: Give the root HTML element a unique and random class name (e.g., "component-xyz"). EVERY CSS selector you write in the 'css' key MUST be prefixed with this unique class to ensure styles do not affect other components.
 17.  **JS SCOPING**: All code in the 'js' key MUST be wrapped in an Immediately Invoked Function Expression (IIFE) like \`(() => { ... })();\` to prevent polluting the global scope.
-
+18. All charts and graphs should be created using Chart.js, D3.js, or similar libraries. If the user asks for a chart, use Chart.js and add its CDN URL to the "external_scripts" array.fit all charts to the container size of div holding them to prevent overflow and make them responsive.
+19. if you are using barchart restrict its height to 100px to 800px whatever suits the design best.
 ---
 ---
 EXAMPLE 1: An interactive modal/popup component
