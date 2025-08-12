@@ -81,6 +81,7 @@ RULES:
 17.  **JS SCOPING**: All code in the 'js' key MUST be wrapped in an Immediately Invoked Function Expression (IIFE) like \`(() => { ... })();\` to prevent polluting the global scope.
 18. All charts and graphs should be created using Chart.js, D3.js, or similar libraries. If the user asks for a chart, use Chart.js and add its CDN URL to the "external_scripts" array.fit all charts to the container size of div holding them to prevent overflow and make them responsive.
 19. if you are using barchart restrict its height to 100px to 800px whatever suits the design best.
+20. All JavaScript must be self-contained in the 'js' key. It must be standard, browser-compatible ES6 JavaScript. **Do not use 'import' or 'export' syntax.** If using an external library like GSAP, assume it is available globally on the window object (e.g., as 'gsap').
 ---
 ---
 EXAMPLE 1: An interactive modal/popup component

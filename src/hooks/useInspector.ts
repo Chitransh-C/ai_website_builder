@@ -79,7 +79,7 @@ export const useInspector = (
       aiResponse.external_scripts.forEach(scriptUrl => {
         const scriptTag = doc.createElement('script');
         scriptTag.src = scriptUrl;
-         scriptTag.type = 'module';
+         
         doc.head.appendChild(scriptTag);
       });
     }
@@ -89,7 +89,7 @@ export const useInspector = (
     doc.head.appendChild(styleElement);
 
     const scriptElement = doc.createElement('script');
-    scriptElement.type = 'module';
+   
     scriptElement.textContent = aiResponse.js;
     doc.body.appendChild(scriptElement);
 
