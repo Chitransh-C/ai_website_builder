@@ -59,12 +59,12 @@ export default function HomePage() {
   
   return (
     <>
-      <div className="flex min-h-screen bg-slate-50 dark:bg-gray-900 transition-colors">
+      <div className="flex min-h-screen bg-sky-100 dark:bg-gray-900 transition-colors">
         
-        <aside className={`bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 ${isHistoryOpen ? 'w-64' : 'w-20'}`}>
+        <aside className={`bg-sky-300 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 ${isHistoryOpen ? 'w-64' : 'w-20'}`}>
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <h2 className={`text-lg font-semibold text-gray-800 dark:text-slate-200 ${!isHistoryOpen && 'hidden'}`}>History</h2>
-            <button onClick={() => setIsHistoryOpen(!isHistoryOpen)} className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+            <button onClick={() => setIsHistoryOpen(!isHistoryOpen)} className="p-1 rounded-md hover:bg-sky-500 dark:hover:bg-gray-700">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" /></svg>
             </button>
           </div>
@@ -177,7 +177,7 @@ export default function HomePage() {
                     </button>
                   </div>
                   <div className={`border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-slate-800 ${isFocusMode ? 'flex-grow' : ''}`}>
-                    <iframe id="preview-iframe" title="Live Preview" sandbox="allow-scripts" className="w-full h-full min-h-[24rem]"/>
+                    <iframe id="preview-iframe" title="Live Preview" sandbox="allow-scripts allow-modals" className="w-full h-full min-h-[24rem]"/>
                   </div>
                   <div className={isFocusMode ? 'hidden' : 'mt-6'}>
                     <div className="flex border-b border-gray-300 dark:border-gray-700">
