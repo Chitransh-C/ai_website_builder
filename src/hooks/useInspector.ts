@@ -10,6 +10,7 @@ export interface CodeState {
   css: string;
   js: string;
   external_scripts?: string[];
+  external_styles?: string[]
 }
 export interface HistoryItem {
   prompt: string;
@@ -83,13 +84,21 @@ export const useInspector = (
         doc.head.appendChild(scriptTag);
       });
     }
+    if (aiResponse.external_styles) {
+       aiResponse.external_styles.forEach(url => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        doc.head.appendChild(link);
+      });
+    }
     // 4. Create style and script elements to inject
     const styleElement = doc.createElement('style');
     styleElement.textContent = aiResponse.css;
     doc.head.appendChild(styleElement);
 
     const scriptElement = doc.createElement('script');
-   
+    scriptElement.defer = true;
     scriptElement.textContent = aiResponse.js;
     doc.body.appendChild(scriptElement);
 
