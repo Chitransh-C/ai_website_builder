@@ -91,7 +91,25 @@ export const Chatbot = ({ codeContext }: ChatbotProps) => {
           {messages.map((msg, index) => (
             <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`p-3 rounded-lg max-w-sm ${msg.role === 'user' ? 'bg-indigo-500 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>
-                <p className="text-sm">{msg.content}</p>
+                <div className="text-sm whitespace-pre-wrap">
+  {msg.content.split(/(\d+\.\s)/).filter(Boolean).map((part, index) => {
+    // This logic reassembles the number with its text on the same line
+    if (index % 2 === 0) {
+      // This is the text part
+      return part;
+    } else {
+      // This is the number part (e.g., "1. "), so we don't add a line break before it
+      return part;
+    }
+  }).reduce((acc, part, index) => {
+    if (index % 2 === 1) {
+      // If it's a number part, prepend a line break before it (except for the first one)
+      acc.push(<br key={`br-${index}`}/>);
+    }
+    acc.push(part);
+    return acc;
+  }, [])}
+</div>
               </div>
             </div>
           ))}
