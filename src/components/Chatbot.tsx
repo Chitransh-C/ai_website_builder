@@ -108,7 +108,7 @@ export const Chatbot = ({ codeContext }: ChatbotProps) => {
     }
     acc.push(part);
     return acc;
-  }, [])}
+  }, [] as (string | JSX.Element)[] )}
 </div>
               </div>
             </div>
