@@ -1,7 +1,7 @@
 // src/components/Chatbot.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type ReactNode } from 'react'
 
 interface Message {
   role: 'user' | 'assistant';
@@ -108,7 +108,7 @@ export const Chatbot = ({ codeContext }: ChatbotProps) => {
     }
     acc.push(part);
     return acc;
-  }, [] as (string | JSX.Element)[] )}
+ }, [] as ReactNode[])}
 </div>
               </div>
             </div>
