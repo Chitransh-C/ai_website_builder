@@ -142,10 +142,11 @@ export const useInspector = (
   const handleRefineClick = async () => {
     // We now need the full aiResponse, not just the selected snippet
     if (!refineInstruction || !aiResponse) return;
-    
+    console.log("sending ai request to refine")
+
     setIsRefining(true);
     try {
-      const response = await fetch('/api/refine-element', {
+      const response = await fetch('/api/refine-element', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -153,11 +154,13 @@ export const useInspector = (
           instruction: refineInstruction,
         }),
       });
-
+      
       if (!response.ok) { throw new Error('Failed to refine element'); }
+      
+      const text = await response.text();
+      const clean = text.replace(/^```json\s*|\s*```$/gm, "").trim();
+      const refinedCode = JSON.parse(clean);
 
-      // The API now returns the complete, updated code object
-      const refinedCode = await response.json();
       
       // Update the parent component's state with the new, fully refined code
       setAiResponse(refinedCode);
@@ -177,6 +180,7 @@ export const useInspector = (
       setSelectedElementCode(null);
       setRefineInstruction("");
     } catch (error) {
+      
       console.error("Failed to refine element:", error);
       alert("Sorry, the refinement failed. Please try again.");
     } finally {

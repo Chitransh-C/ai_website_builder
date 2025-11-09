@@ -34,6 +34,7 @@ function extractJsonContent(rawString: string) {
   const css = extract("css");
   const js = extract("js");
   const external_scripts = extractArray("external_scripts");
+ 
 
   if (html) { // We only need HTML to be present to consider it a success
     return { html, css, js, external_scripts };
@@ -80,7 +81,7 @@ RULES:
 16.  **CSS SCOPING**: Give the root HTML element a unique and random class name (e.g., "component-xyz"). EVERY CSS selector you write in the 'css' key MUST be prefixed with this unique class to ensure styles do not affect other components.
 17.  **JS SCOPING**: All code in the 'js' key MUST be wrapped in an Immediately Invoked Function Expression (IIFE) like \`(() => { ... })();\` to prevent polluting the global scope.
 18. All charts and graphs should be created using Chart.js, D3.js, or similar libraries. If the user asks for a chart, use Chart.js and add its CDN URL to the "external_scripts" array.fit all charts to the container size of div holding them to prevent overflow and make them responsive.
-19. if you are using barchart restrict its height to 100px to 800px whatever suits the design best.
+19. if you are using any charts restrict its height to 100px to 800px whatever suits the design best.
 20. All JavaScript must be self-contained in the 'js' key. It must be standard, browser-compatible ES6 JavaScript. **Do not use 'import' or 'export' syntax.** If using an external library like GSAP, assume it is available globally on the window object (e.g., as 'gsap').
 21. If a component requires an external stylesheet (like Leaflet.js CSS or Font Awesome), add its CSS CDN URL to the "external_styles" array.**Do not use 'import' or 'export' syntax.** If using an external library assume it is available globally on the window object.
 ---

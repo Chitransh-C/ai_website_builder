@@ -156,8 +156,7 @@ export default function HomePage() {
                     disabled={isRefining}
                   />
                   <button 
-                    onClick={handleRefineClick } 
-
+                    onClick={handleRefineClick} 
                     className="mt-2 px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
                     disabled={isRefining}
                   >

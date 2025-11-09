@@ -59,7 +59,7 @@ export const Chatbot = ({ codeContext }: ChatbotProps) => {
       if (!response.ok) {
         throw new Error('Failed to get a response from the AI.');
       }
-
+      
       const data = await response.json();
       const aiMessage: Message = { role: 'assistant', content: data.answer };
       setMessages(prev => [...prev, aiMessage]); // Update UI with AI's response
