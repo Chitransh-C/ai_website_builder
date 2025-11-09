@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**AI Website Builder 🚀**
+A powerful, AI-driven tool that generates and refines web components in real-time. Built with Next.js and the Google Gemini API, this application allows users to go from a simple text prompt to a fully functional, styled, and interactive web component with just a few clicks.
 
-## Getting Started
+Live Demo: [Link to your Vercel deployment]
 
-First, run the development server:
+✨ Key Features
+1)  This project is a feature-rich Minimum Viable Product (MVP) that showcases a wide range of modern web development and AI      integration techniques:
 
-```bash
+2)  AI Code Generation: Leverages the Google Gemini API to generate HTML, CSS, and JavaScript from natural language prompts.
+
+3)  Live Preview: Instantly renders the generated code in a secure, sandboxed <iframe> for immediate visual feedback.
+
+4)  Interactive Element Inspector: A "Developer Mode" that allows users to hover over and select any element in the live          preview to see its specific code.
+
+5)  Iterative Refinement: Users can select a generated element and provide follow-up instructions (e.g., "make this button        green") to the AI, which then refines just that part of the code.
+
+6)  External Library Support: The AI can intelligently detect when a prompt requires an external library (like Chart.js,          GSAP, or Leaflet.js) and automatically include the necessary CDN links for both JS and CSS.
+
+7) Conversational AI Chatbot: A floating chatbot that maintains conversation history, allowing users to ask follow-up            questions to understand the generated code.
+
+8)  Session History: Automatically saves all generated components in a session history, allowing users to revisit and switch      between their past creations.
+
+**Polished UI:**
+
+Dark/Light Mode: A theme switcher for user comfort.
+
+Collapsible Sidebar: A responsive history panel that can be collapsed to maximize workspace.
+
+Utility Features: Includes "Copy to Clipboard" for each code block and a fullscreen "Focus Mode" for the preview.
+
+**🛠️ Tech Stack**
+Framework: Next.js (with App Router)
+
+Language: TypeScript
+
+Styling: Tailwind CSS
+
+AI Model: Google Gemini Pro
+
+UI Components: React with Hooks
+
+Syntax Highlighting: react-syntax-highlighter
+
+Deployment: Vercel
+
+🚀 Getting Started
+To run this project on your local machine, follow these steps.
+
+Prerequisites
+Node.js (v18 or later)
+
+npm or yarn
+
+Installation
+Clone the repository:
+
+git clone https://github.com/your-username/ai-website-builder.git
+cd ai-website-builder
+
+Install dependencies:
+
+npm install
+
+Set up environment variables:
+
+Create a new file in the root of your project named .env.local.
+
+Add your Google Gemini API key to this file:
+
+GEMINI_API_KEY=your_secret_api_key_here
+
+Run the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🔮 Future Work
+This project has a solid foundation that can be extended with many more professional features, such as:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+User Accounts: Allowing users to sign up and save their components to a database.
 
-## Learn More
+Component Export: A feature to download the generated code as a clean .zip file.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Full Page Composition: A drag-and-drop interface to assemble multiple generated components into a complete webpage.
